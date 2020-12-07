@@ -238,9 +238,13 @@ function postData(form){
     form.addEventListener('submit', (e)=> {
         e.preventDefault(); //отключение перезагрузки страницы при отправки формы
 
-        const statusMessage = document.createElement('div');
-        statusMessage.textContent = message.loading;
-        form.append(statusMessage);
+        const statusMessage = document.createElement('img');
+        statusMessage.src = message.loading;
+        statusMessage.style.cssText = `
+            display:block;
+            margin: 0 auto;
+        `;
+        form.insertAdjacentElement('afterend',statusMessage);
         const request = new XMLHttpRequest();
         request.open('POST', 'server.php'); 
         request.setRequestHeader('Content-type', 'application/json; charset=utf-8');//для json
@@ -260,21 +264,39 @@ function postData(form){
         request.addEventListener('load', ()=>{
             if (request.status === 200){
                 console.log(request.response);
-                statusMessage.textContent = message.success;
+                showThanksModal(message.success);
                 form.reset();
-                setTimeout(()=>{
-                    statusMessage.remove();
-                }, 2000);
+                statusMessage.remove();
             }
+            
             else{
-                statusMessage.textContent = message.failure;
+            showThanksModal(message.failure);
             }
         });
 
         
         });}
 
-       
+       function showThanksModal(message){
+            const prewModal = document.querySelector('.modal__dialog');
+            prewModal.classList.add('hide');
+           openModal();
+            const ShowModal = document.createElement('div');
+            ShowModal.classList.add('modal__dialog');
+            ShowModal.innerHTML = `
+            <div class="modal__content">
+                    <div data-close class="modal__close">&times;</div>
+                    <div class="modal__title">${message}</div>
+            </div>
+            `;
+            document.querySelector('.modal').append(ShowModal);
+            setTimeout(()=>{
+                ShowModal.remove();
+                prewModal.classList.remove('hide');
+                prewModal.classList.add('show');  
+               closeModal();
+            },4000);
+       }
 
        
 
