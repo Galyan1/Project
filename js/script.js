@@ -245,33 +245,24 @@ function postData(form){
             margin: 0 auto;
         `;
         form.insertAdjacentElement('afterend',statusMessage);
-        const request = new XMLHttpRequest();
-        request.open('POST', 'server.php'); 
-        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');//для json
         
-        
-        const formData = new FormData(form);//перевести это в json
+        const formData = new FormData(form);
 
-        const object = {};
-        
-        formData.forEach((value, key)=>{
-            object[key]=value;
-        });
-
-        const json = JSON.stringify(object); //конвертация в json
-
-        request.send(json);
-        request.addEventListener('load', ()=>{
-            if (request.status === 200){
-                console.log(request.response);
-                showThanksModal(message.success);
-                form.reset();
-                statusMessage.remove();
-            }
-            
-            else{
-            showThanksModal(message.failure);
-            }
+        fetch('server.php', {
+            method:"POST",
+            // headers: {
+            //     'Content-type': 'application/json'
+            // },
+            body: formData
+        }).then(data => data.text())
+        .then(data => {
+            console.log(data);
+            showThanksModal(message.success);
+            statusMessage.remove();
+        }).catch(() =>{
+            showThanksModal(message.failure)
+        }).finally(()=>{
+            form.reset();
         });
 
         
@@ -300,89 +291,29 @@ function postData(form){
 
        
 
-//         fetch('server.php', {
-//             method: 'POST',
-//             headers:{
-//              'Content-type': 'application/json'
-//             },
-//             body: JSON.stringify(object)
-//         }).then(data => data.text())
-//         .then(data => {
-//             console.log(data);
-//             showThanksModal(message.success);
-//             statusDatamessage.remove();
-//         }).catch(()=>{
-//             showThanksModal(message.failure);
-//             statusDatamessage.remove();
-//         }).finally(()=>{
-//             form.reset();
-//         });
 
-
-
-//        /* request.addEventListener('load', () =>{
-//             if (request.status === 200){
-//                 console.log(request.response);
-//                 showThanksModal(message.success);
-//                 form.reset();
-//                 statusDatamessage.remove();
-//             }
-//             else{
-//                 showThanksModal(message.failure);
-//                 statusDatamessage.remove();
-//             }
-//         });*/
-//     });   
-// }
-
-
-// function showThanksModal(message) {
-//     const prevModalDialog = document.querySelector('.modal__dialog');
-
-//     prevModalDialog.classList.add('hide');
-//     openModal();
-
-//     const thanksModal = document.createElement('div');
-//     thanksModal.classList.add('modal__dialog');
-//     thanksModal.innerHTML = `
-//         <div class="modal__content">
-//             <div class="modal__close" data-close>×</div>
-//             <div class="modal__title">${message}</div>
-//         </div>
-//     `;
-//     document.querySelector('.modal').append(thanksModal);
-//     setTimeout(() => {
-//         thanksModal.remove();
-//         prevModalDialog.classList.add('show');
-//         prevModalDialog.classList.remove('hide');
-//         closeModal();
-//     }, 4000);
-// }
 
 
 // API 
 // DOM API - методы, которые позволяют работать с элементами на странице
 
 // fetch api 
+// fetch('https://jsonplaceholder.typicode.com/todos/1') //GET
+    // .then(response => response.json())//С серевера получил json объект в response. с помщью json() привел к норм виду
+    // .then(json => console.log(json));// отобразили этот объект
 
-/*fetch('https://jsonplaceholder.typicode.com/todos/posts', {
-    method: 'POST',
-    body: JSON.stringify{(name:'alex' )},
-    headers:{
-        'Content-type:' 'application/json'
-    };
-})
-  .then(response => response.json())
-  .then(json => console.log(json));*/
+// fetch('https://jsonplaceholder.typicode.com/posts', { //POST 
+//     method: "POST",
+//     body: JSON.stringify({name: 'ALEX'}),
+//     headers:{
+//         'Content-type': 'application/json'
+//     }
 
-
-// fetch(' http://localhost:3000/menu')
-// .then(data => data.json())
-//   .then(res => console.log(res));
-
+// })
+//   .then(response => response.json())
+//   .then(json => console.log(json));
 
 
 
-});
 
-
+    });
