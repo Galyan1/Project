@@ -242,10 +242,21 @@ function postData(form){
         statusMessage.textContent = message.loading;
         form.append(statusMessage);
         const request = new XMLHttpRequest();
-        request.open('POST', 'server.php');
+        request.open('POST', 'server.php'); 
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');//для json
         
-        const formData = new FormData(form);
-        request.send(formData);
+        
+        const formData = new FormData(form);//перевести это в json
+
+        const object = {};
+        
+        formData.forEach((value, key)=>{
+            object[key]=value;
+        });
+
+        const json = JSON.stringify(object); //конвертация в json
+
+        request.send(json);
         request.addEventListener('load', ()=>{
             if (request.status === 200){
                 console.log(request.response);
@@ -263,7 +274,7 @@ function postData(form){
         
         });}
 
-       // const json = JSON.stringify(object); //конвертация в json
+       
 
        
 
