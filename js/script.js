@@ -246,14 +246,21 @@ function postData(form){
         `;
         form.insertAdjacentElement('afterend',statusMessage);
         
-        const formData = new FormData(form);
+        const formData = new FormData(form);//перевести это в json
 
-        fetch('server.php', {
+        const object = {};
+        
+        formData.forEach((value, key)=>{
+            object[key]=value;
+        });
+
+
+        fetch('server1.php', { //fetch не реагирует на ошибки 404 и тд, значит catch не сработает (reject)
             method:"POST",
-            // headers: {
-            //     'Content-type': 'application/json'
-            // },
-            body: formData
+            headers: {
+                'Content-type': 'application/json'
+             },
+            body: JSON.stringify(object) //перевод в json
         }).then(data => data.text())
         .then(data => {
             console.log(data);
