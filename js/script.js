@@ -188,37 +188,24 @@ class MenuField {
 
 }
 
-new MenuField(
-    "img/tabs/vegy.jpg",
-    "vegy",
-    'Меню "Фитнес"',
-    'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-    5,
-    ".menu .container",
-    'menu__item',
-    'big'
-).ShowCard();
+const getResource = async(url) => { //превращаем ассинхронный в синхронный как бы
+    const res =await fetch(url);
 
-new MenuField(
-    "img/tabs/hamburger.jpg",
-    "burger",
-    'Меню "Почти ПП"',
-    'Меню "Почти ПП" - это новый подход к приготовлению блюд: Две мясных котлеты гриль, специальный соус, сыр, огурцы, салат и лук, все на булочке с кунжутом',
-    4,
-    ".menu .container"
-    
+    if(!res.ok){ //если ошибка, чтоб сработал блок catch
+      throw  new Error(`Coold not fatch ${url}, status: ${res.status}`);
 
-).ShowCard();
+    }
+    return await res.json(); //возращаем в json формате
+ };
 
-new MenuField(
-    "img/tabs/post.jpg",
-    "burger",
-    'Меню "Постное"',
-    'Чтобы очистить душу, тело необходимо держать в строгости и есть самую простую пищу, исключающую продукты животного происхождения (мясо, молоко, сливочное масло, яйца) ',
-    3,
-    ".menu .container",
-    'menu__item'
-).ShowCard();
+ getResource('http://localhost:3000/menu')
+    .then(data =>{ //данные с сервера
+        data.forEach(({img, altimg, title, descr, price})=>{
+            new MenuField(img, altimg, title, descr, price, ".menu .container").ShowCard();
+        });
+    });
+
+
 
 // серверная часть FORMS
 
@@ -231,10 +218,21 @@ const message = {
 };
 
 forms.forEach(item =>{
-    postData(item);
+    bindPostData(item);
 });
 
-function postData(form){
+const postData = async(url, data) => { //превращаем ассинхронный в синхронный как бы
+   const res =await fetch(url, {
+    method:"POST",
+    headers: {
+        'Content-type': 'application/json'
+     },
+    body: data //данные,которые мы постим
+   });
+   return await res.json(); //возращаем в json формате
+};
+
+function bindPostData(form){
     form.addEventListener('submit', (e)=> {
         e.preventDefault(); //отключение перезагрузки страницы при отправки формы
 
@@ -248,26 +246,16 @@ function postData(form){
         
         const formData = new FormData(form);//перевести это в json
 
-        const object = {};
-        
-        formData.forEach((value, key)=>{
-            object[key]=value;
-        });
+        const json = JSON.stringify(Object.fromEntries(formData.entries()));
+        console.log(json);
 
-
-        fetch('server1.php', { //fetch не реагирует на ошибки 404 и тд, значит catch не сработает (reject)
-            method:"POST",
-            headers: {
-                'Content-type': 'application/json'
-             },
-            body: JSON.stringify(object) //перевод в json
-        }).then(data => data.text())
-        .then(data => {
+        postData('http://localhost:3000/requests', json )
+        .then(data => { //данные от сервера
             console.log(data);
             showThanksModal(message.success);
             statusMessage.remove();
         }).catch(() =>{
-            showThanksModal(message.failure)
+            showThanksModal(message.failure);
         }).finally(()=>{
             form.reset();
         });
@@ -297,7 +285,9 @@ function postData(form){
        }
 
        
-
+// fetch('  http://localhost:3000/menu')
+//     .then(data => data.json())
+//     .then(res => console.log(res));
 
 
 
