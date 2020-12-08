@@ -312,5 +312,69 @@ function bindPostData(form){
 
 
 
+//СЛАЙДЕР
+
+const //parentSlider = document.querySelector('.offer__slider'),
+      slidenext = document.querySelector('.offer__slider-next'),
+      slideprev = document.querySelector('.offer__slider-prev'),
+      slides = document.querySelectorAll('.offer__slide'),
+      current = document.querySelector('#current');
+
+
+
+       function hideSlide(){
+            slides.forEach(slide =>{
+                slide.classList.add('hide');
+                slide.classList.remove('show');
+            });
+       }
+
+       hideSlide();
+
+       function showSlide(i=0){
+           slides[i].classList.add('show');
+           if (i < 10){
+            current.textContent = `0${i+1}`;
+           }
+           else{
+            current.textContent = `${i+1}`;
+           }
+           slides[i].classList.remove('hide');
+       }
+
+
+       showSlide();
+
+       let i = 0;
+
+       slidenext.addEventListener('click', (e)=>{
+        if (e.target  && i < slides.length-1){
+            i++;
+            console.log(i);
+            hideSlide();
+            showSlide(i);
+        }
+    });
+
+    slideprev.addEventListener('click', e =>{
+        if (e.target && i > 0){
+            i--;   
+            hideSlide();
+            showSlide(i);
+        }
+    });
+
+    
+
+
+
+
+
+
+
+
+
+
+
 
     });
