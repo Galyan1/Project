@@ -314,65 +314,270 @@ function bindPostData(form){
 
 //СЛАЙДЕР
 
-const //parentSlider = document.querySelector('.offer__slider'),
+const parentSlider = document.querySelector('.offer__slider'),
       slidenext = document.querySelector('.offer__slider-next'),
       slideprev = document.querySelector('.offer__slider-prev'),
       slides = document.querySelectorAll('.offer__slide'),
-      current = document.querySelector('#current');
+      current = document.querySelector('#current'),
+      slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+      width = window.getComputedStyle(slidesWrapper).width, // списать свойство ширины с этого эл-та
+      slidesField = document.querySelector('.offer__slider-inner');
+
+   
 
 
-
-       function hideSlide(){
-            slides.forEach(slide =>{
-                slide.classList.add('hide');
-                slide.classList.remove('show');
-            });
-       }
-
-       hideSlide();
-
-       function showSlide(i=0){
-           slides[i].classList.add('show');
-           if (i < 10){
-            current.textContent = `0${i+1}`;
-           }
-           else{
-            current.textContent = `${i+1}`;
-           }
-           slides[i].classList.remove('hide');
-       }
-
-
-       showSlide();
-
-       let i = 0;
-
-       slidenext.addEventListener('click', (e)=>{
-        if (e.target  && i < slides.length-1){
-            i++;
-            console.log(i);
-            hideSlide();
-            showSlide(i);
-        }
+      slidesField.style.width = 100 * slides.length + '%'; // ширина блока = сумма ширины всех слайдов
+      slidesField.style.display = 'flex';
+      
+     
+    slides.forEach(slide => {
+        slide.style.width = width; // каждый слайд имеет одинаковый размер = ширина родителя
     });
 
-    slideprev.addEventListener('click', e =>{
-        if (e.target && i > 0){
-            i--;   
-            hideSlide();
-            showSlide(i);
-        }
-    });
+    parentSlider.style.position = 'relative';
+
+    const swithes = document.createElement('ol');
+    swithes.classList.add('slider-swithes');
+    swithes.style.cssText = ` position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 15;
+    display: flex;
+    justify-content: center;
+    margin-right: 15%;
+    margin-left: 15%;
+    list-style: none;`;
+    parentSlider.append(swithes);
 
     
 
+    for (let i = 0; i< slides.length; i++){
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = ` box-sizing: content-box;
+        flex: 0 1 auto;
+        width: 30px;
+        height: 6px;
+        margin-right: 3px;
+        margin-left: 3px;
+        cursor: pointer;
+        background-color: #fff;
+        background-clip: padding-box;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        transition: opacity .6s ease;`;
+        swithes.append(dot);   
+    }
+    const dots = swithes.querySelectorAll('li');
+
+    slidesWrapper.style.overflow = 'hidden';
+    slidesField.style.transition ='0.5s all';
+
+    let index = 0,
+        offset = 0;
+
+        
+
+        function showSlide(i=0){
+                   if (i < 10){
+                    current.textContent = `0${i+1}`;
+                   }
+                   else{
+                    current.textContent = `${i+1}`;
+                   }
+              }
+              showSlide();
+  
+
+     slidenext.addEventListener('click', ()=>{
+        if (index  < slides.length - 1){
+             index++;
+            offset = index * parseInt(width);
+            showSlide(index);
+             hideDots(index);
+           
+         } 
+         else{
+             index = 0;
+             offset = index * parseInt(width);
+             showSlide(index);
+             hideDots(index);
+        }
+         slidesField.style.transform = `translateX(${-offset}px)`;
+        
+      });
+
+
+      slideprev.addEventListener('click', e =>{
+          if (index > 0){
+             index--;
+             offset = index * parseInt(width);
+             showSlide(index);
+             hideDots(index);
+          }
+          else{
+             index = slides.length - 1;
+             offset = index * parseInt(width);
+             showSlide(index);
+             hideDots(index);
+         }
+         slidesField.style.transform = `translateX(${-offset}px)`;
+              });
+
+
+      dots.forEach((dot,i)=>{
+          dot.addEventListener('click',()=>{
+            index = i;
+            offset = index * parseInt(width);
+            hideDots(index);
+            showSlide(index);
+            slidesField.style.transform = `translateX(${-offset}px)`;
+          });
+      })    ;    
+   /* parentSlider.addEventListener('click', e=>{
+        if (e.target && e.target.matches('li')){
+            dots.forEach((dot,i)=>{
+                if(e.target === dot){
+                    index = i;
+                    offset = index * parseInt(width);
+                    hideDots(index);
+                    showSlide(index);
+                    slidesField.style.transform = `translateX(${-offset}px)`;
+                }
+            });
+        }
+    });*/
+ 
+
+    function hideDots(i = 0){
+        dots.forEach(dot=>{
+            dot.style.opacity = '.4';
+        });
+        dots[i].style.opacity = '1';
+    }
+    hideDots();
+
+
+    // ПЕРЕКЛЮЧАТЕЛИ 
+
+    
+
+    //    function hideSlide(){
+    //         slides.forEach(slide =>{
+    //             slide.classList.add('hide');
+    //             slide.classList.remove('show');
+    //         });
+    //    }
+
+    //    hideSlide();
+
+    //    function showSlide(i=0){
+    //        slides[i].classList.add('show');
+    //        if (i < 10){
+    //         current.textContent = `0${i+1}`;
+    //        }
+    //        else{
+    //         current.textContent = `${i+1}`;
+    //        }
+    //        slides[i].classList.remove('hide');
+    //    }
+
+
+    //    showSlide();
+
+    //    let i = 0;
+
+    //    slidenext.addEventListener('click', (e)=>{
+    //     if (e.target  && i < slides.length-1){
+    //         i++;
+    //         console.log(i);
+    //         hideSlide();
+    //         showSlide(i);
+    //     }
+    // });
+
+    // slideprev.addEventListener('click', e =>{
+    //     if (e.target && i > 0){
+    //         i--;   
+    //         hideSlide();
+    //         showSlide(i);
+    //     }
+    // });
+
+    
+
+// КАЛЬКУЛЯТОР КАЛОРИЙ 
+
+const result = document.querySelector('.calculating__result span');
+let sex ='female', height, weight, age, ratio =1.375;
+
+function calcTotal() {
+    if (!sex || !height || !weight || !age || !ratio) {
+        result.textContent = '0'; 
+        return;
+    }
+    if (sex === 'female') {
+        result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
+    } else {
+        result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+    }
+}
+
+calcTotal();
+
+function getStaticInformation(parentSelector, activeClass){
+        const elements = document.querySelectorAll(`${parentSelector} div`);
+
+        elements.forEach(elem =>{
+           elem.addEventListener('click', (e)=>{
+                if( e.target && e.target.getAttribute('data-ratio')){
+                    ratio = e.target.getAttribute('data-ratio');
+                } else{
+                    sex = e.target.getAttribute('id');
+                }
+    
+                elements.forEach(elem => {
+                        elem.classList.remove(activeClass);
+                });
+    
+                e.target.classList.add(activeClass);
+                calcTotal();
+        });
+
+        
+        });
+        
+}
+      getStaticInformation('#gender','calculating__choose-item_active' );
+      getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');
 
 
 
+function getDinamicInformation(selector){
+    const input = document.querySelector(selector);
+    
+    input.addEventListener('input', ()=>{
+        switch (input.getAttribute('id')) {
+            case 'height':
+                height = +input.value;
+                break;
+            case 'weight':
+                weight = +input.value;
+                break;
+            case 'age':
+                age = +input.value;
+                break;
+        }
+        calcTotal();
+       
+    });
+   
+}
 
-
-
-
+getDinamicInformation('#height');
+getDinamicInformation('#weight');
+getDinamicInformation('#age');
 
 
 
