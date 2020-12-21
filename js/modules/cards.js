@@ -41,7 +41,7 @@ function cards(){
     
  
     
-     getResource('https://github.com/Galyan1/Project/blob/gh-pages/db.json/menu')
+     getResource('http://localhost:3000/menu')
         .then(data =>{ //данные с сервера
             data.forEach(({img, altimg, title, descr, price})=>{
                 new MenuField(img, altimg, title, descr, price, ".menu .container").ShowCard();
