@@ -28,12 +28,13 @@ function forms(selectorForm, modalTimerId){
             `;
             form.insertAdjacentElement('afterend',statusMessage);
             
-            const formData = new FormData(form);//перевести это в json
-    
+            const formData = new FormData(form);//собрали данные с формы, перевести это в json 
+            console.log(`form data ${formData.entries()}`);
             const json = JSON.stringify(Object.fromEntries(formData.entries()));
+                      //  перевод в json /преобразует список пар ключ-значение в объект/ находит ключ-значение               
             console.log(json);
     
-            postData('http://localhost:3000/requests', json )
+            postData("http://localhost:3000/requests", json )
             .then(data => { //данные от сервера
                 console.log(data);
                 showThanksModal(message.success);

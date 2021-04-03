@@ -229,12 +229,13 @@ function forms(selectorForm, modalTimerId){
             `;
             form.insertAdjacentElement('afterend',statusMessage);
             
-            const formData = new FormData(form);//перевести это в json
-    
+            const formData = new FormData(form);//собрали данные с формы, перевести это в json 
+            console.log(`form data ${formData.entries()}`);
             const json = JSON.stringify(Object.fromEntries(formData.entries()));
+                      //  перевод в json /преобразует список пар ключ-значение в объект/ находит ключ-значение               
             console.log(json);
     
-            (0,_services_services__WEBPACK_IMPORTED_MODULE_1__.postData)('http://localhost:3000/requests', json )
+            (0,_services_services__WEBPACK_IMPORTED_MODULE_1__.postData)("http://localhost:3000/requests", json )
             .then(data => { //данные от сервера
                 console.log(data);
                 showThanksModal(message.success);
@@ -326,7 +327,7 @@ function modalWindow(triggerSelector, modalSelector, modalTimerId){
     });
 
     window.addEventListener('keydown', (event) => {
-        if (event.key == 'Backspace' && modal.classList.contains('show')) { 
+        if (event.key ==  modal.classList.contains('show')) { 
             closeModal(modalSelector);
         }  
     });
@@ -669,7 +670,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     (0,_modules_modal__WEBPACK_IMPORTED_MODULE_6__.default)('[data-modal]','.modal', modalTimerId);
     (0,_modules_tabs__WEBPACK_IMPORTED_MODULE_0__.default)('.tabheader__item','.tabcontent','.tabheader__items','tabheader__item_active');
-    (0,_modules_timer__WEBPACK_IMPORTED_MODULE_1__.default)('.timer','2020-12-24');
+    (0,_modules_timer__WEBPACK_IMPORTED_MODULE_1__.default)('.timer','2022-12-24');
     (0,_modules_forms__WEBPACK_IMPORTED_MODULE_2__.default)('form',modalTimerId);
     (0,_modules_slider__WEBPACK_IMPORTED_MODULE_3__.default)();
     (0,_modules_cards__WEBPACK_IMPORTED_MODULE_4__.default)();
@@ -767,7 +768,7 @@ const postData = async(url, data) => { //превращаем ассинхрон
       },
      body: data //данные,которые мы постим
     });
-    return await res.json(); //возращаем в json формате
+    return await res.json(); //возращаем в js формате
  };
 
  const getResource = async(url) => { //превращаем ассинхронный в синхронный как бы
@@ -777,7 +778,7 @@ const postData = async(url, data) => { //превращаем ассинхрон
       throw  new Error(`Coold not fatch ${url}, status: ${res.status}`);
 
     }
-    return await res.json(); //возращаем в json формате
+    return await res.json(); //возращаем в js формате
  };
 
  

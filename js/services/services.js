@@ -6,7 +6,7 @@ const postData = async(url, data) => { //превращаем ассинхрон
       },
      body: data //данные,которые мы постим
     });
-    return await res.json(); //возращаем в json формате
+    return await res.json(); //возращаем в js формате
  };
 
  const getResource = async(url) => { //превращаем ассинхронный в синхронный как бы
@@ -16,7 +16,7 @@ const postData = async(url, data) => { //превращаем ассинхрон
       throw  new Error(`Coold not fatch ${url}, status: ${res.status}`);
 
     }
-    return await res.json(); //возращаем в json формате
+    return await res.json(); //возращаем в js формате
  };
 
  export {postData, getResource};

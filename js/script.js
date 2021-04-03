@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     modal('[data-modal]','.modal', modalTimerId);
     tabs('.tabheader__item','.tabcontent','.tabheader__items','tabheader__item_active');
-    timer('.timer','2020-12-24');
+    timer('.timer','2022-12-24');
     forms('form',modalTimerId);
     slider();
     cards();

@@ -24,34 +24,14 @@
   ],
   "requests": [
     {
-      "name": "galyan",
-      "phone": "999",
+      "name": "pug",
+      "phone": "322-223-322",
       "id": 1
     },
     {
-      "name": "galyan",
-      "phone": "9055168681",
+      "name": "zero",
+      "phone": "098765432",
       "id": 2
-    },
-    {
-      "name": "galyan",
-      "phone": "9055168681",
-      "id": 3
-    },
-    {
-      "name": "galyan",
-      "phone": "9055168681",
-      "id": 4
-    },
-    {
-      "name": "vova",
-      "phone": "9055168681",
-      "id": 5
-    },
-    {
-      "name": "vova",
-      "phone": "89652842312",
-      "id": 6
     }
   ]
 }

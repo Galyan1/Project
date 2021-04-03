@@ -38,7 +38,7 @@ function modalWindow(triggerSelector, modalSelector, modalTimerId){
     });
 
     window.addEventListener('keydown', (event) => {
-        if (event.key == 'Backspace' && modal.classList.contains('show')) { 
+        if (event.key ==  modal.classList.contains('show')) { 
             closeModal(modalSelector);
         }  
     });
